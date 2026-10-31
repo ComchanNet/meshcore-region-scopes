@@ -6,13 +6,13 @@ _Draft for discussion · 2026-10-31 · adapted and simplified from the PNW regio
 
 ## Hierarchy
 
-`south`, `gc` and `tx` are siblings directly under `us`. `south` and `gc` are broad scopes for wide-area traffic, and `tx` holds the Texas metro scopes.
+`us-south` and `us-gc` are top-level scopes on the same level as `us`, with no parent. They're broad scopes for wide-area traffic, and the names match what mesh groups in neighboring states already use. `tx` sits under `us` and holds the Texas metro scopes.
 
 | Scope | Name | Parent | Covers |
 |---|---|---|---|
 | `us` | United States | (root) | Whole country |
-| `south` | South | `us` | Broad, high-level scope for wide-area communication across southern states |
-| `gc` | Gulf Coast | `us` | Broad, high-level scope for wide-area communication along the Gulf Coast. Sibling of `south` and `tx` |
+| `us-south` | South | (root) | Broad, high-level scope for wide-area communication across southern states. Shared with neighboring states' meshes |
+| `us-gc` | Gulf Coast | (root) | Broad, high-level scope for wide-area communication along the Gulf Coast. Shared with neighboring states' meshes |
 | `tx` | Texas | `us` | All of Texas. Also the catch-all for any area without its own metro scope yet |
 | `dfw` | Dallas–Fort Worth | `tx` | DFW metro plus edge counties (22 counties) |
 | `dal` | Dallas | `dfw` | Collin, Dallas, Denton, Ellis, Hunt, Kaufman, Rockwall · edge: Fannin, Grayson, Henderson, Navarro, Van Zandt |
@@ -36,7 +36,7 @@ Areas that don't fit one of these stay in `tx` until they do. Future scopes foll
 
 ## What we kept from the PNW document
 
-- **Short, flat, lowercase names.** Use only a–z, 0–9 and `-`, with three letters or fewer where possible. Under `tx`, names follow the rule above. Above `tx`, plain abbreviations are fine (`south`, `gc`). A name is just `dal`, not `us-gc-tx-dfw-dal`; the hierarchy comes from the parent field. Names have to be unique across the mesh.
+- **Short, flat, lowercase names.** Use only a–z, 0–9 and `-`, with three letters or fewer where possible. Under `tx`, names follow the rule above. Above `tx`, names match the ones neighboring meshes already use (`us-south`, `us-gc`). A name is just `dal`, not `us-tx-dfw-dal`; the hierarchy comes from the parent field. Names have to be unique across the mesh.
 - **Every repeater carries its full ancestry.** Firmware matches traffic on each region's own key and never looks at the parent. A repeater with only `dal` won't forward `dfw` or `tx` traffic, so each level needs its own `region put`.
 - **Scope to your audience.** Use the smallest scope that reaches the people you're talking to. Local chat goes on `dal`/`ftw`/`aus`/`sat`, metro-wide traffic on `dfw`/`asa`, and statewide traffic on `tx`. Bots should flood on a scope, never unscoped.
 - **No airtime cost.** Region names never go over the air. Packets carry only small transport codes derived from the region name.
@@ -47,8 +47,8 @@ Dallas repeater (firmware 1.15.0+):
 
 ```
 region put us
-region put south us
-region put gc us
+region put us-south
+region put us-gc
 region put tx us
 region put dfw tx
 region put dal dfw
@@ -59,15 +59,15 @@ San Antonio repeater:
 
 ```
 region put us
-region put south us
-region put gc us
+region put us-south
+region put us-gc
 region put tx us
 region put asa tx
 region put sat asa
 region save
 ```
 
-Every Texas repeater carries `us`, `south`, `gc` and `tx`, so wide-area traffic on the broad scopes reaches the whole state. A rural repeater outside any metro stops at `region put tx us`. A Houston repeater ends with `region put hou tx`. On firmware 1.14.x and earlier, add `region allowf <name>` after each `put`.
+Every Texas repeater carries `us`, `us-south`, `us-gc` and `tx`, so wide-area traffic on the broad scopes reaches the whole state. A rural repeater outside any metro stops at `region put tx us`. A Houston repeater ends with `region put hou tx`. On firmware 1.14.x and earlier, add `region allowf <name>` after each `put`.
 
 **Keep unscoped traffic for now.** Unscoped traffic uses the reserved root region `*`, and repeaters allow flood on it by default. Do not remove or deny flood on `*` on any repeater yet. Many nodes run older firmware or haven't set a region scope, and they still depend on unscoped flood. We'll decide on a later date for removing `*` once region scopes are widely adopted.
 
@@ -91,7 +91,7 @@ A Fort Worth user might keep Public on `tx`, set `#weather` to `dfw` and set `#b
 
 ## Open questions
 
-1. **Which states are in `south` and `gc`?** Both are broad, high-level scopes for wide-area communication, not local traffic. Every Texas repeater carries both, so it relays wide-area traffic. Which other states join them is still open.
+1. **Aligning with neighbors on `us-south` and `us-gc`.** Both are broad, high-level scopes for wide-area communication, not local traffic, and are already in use by mesh groups in neighboring states. Every Texas repeater carries both. We should confirm with those groups that the names and intended use match.
 2. **Uppercase vs lowercase.** The original ask used DFW/ASA. The convention is lowercase, so this draft uses `dfw` and `asa`.
 3. **Edge counties.** Are the right outlying counties included? Bell (Killeen–Temple) and Jefferson (Beaumont) are left in `tx` for now.
 4. **Next metros.** Likely candidates for the next scopes are El Paso (`elp`), the Rio Grande Valley and Corpus Christi. Should `hou` get sub-regions?

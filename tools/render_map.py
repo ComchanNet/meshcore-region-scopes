@@ -80,7 +80,7 @@ fig.text(0.04, 0.915, "Draft for discussion · metros = OMB MSA counties plus th
 px = fig.add_axes([0.67, 0.30, 0.31, 0.58]); px.axis("off"); px.set_xlim(0,1); px.set_ylim(0,1)
 px.add_patch(FancyBboxPatch((0.0,0.0),1,1, boxstyle="round,pad=0,rounding_size=0.03", fc="#faf9ff", ec="#e2ddf5", lw=1))
 px.text(0.06, 0.93, "HIERARCHY", fontsize=10, color="#6d4aff", fontweight="bold")
-rows = [(0,"us","United States","#ffffff"),(1,"south","South","#ffffff"),(1,"gc","Gulf Coast","#ffffff"),(1,"tx","Texas (catch-all)",C["tx"]),
+rows = [(0,"us-south","South (wide-area)","#ffffff"),(0,"us-gc","Gulf Coast (wide-area)","#ffffff"),(0,"us","United States","#ffffff"),(1,"tx","Texas (catch-all)",C["tx"]),
         (2,"dfw","Dallas–Fort Worth","#ffffff"),(3,"dal","Dallas",C["dal"]),(3,"ftw","Fort Worth",C["ftw"]),
         (2,"asa","Austin–San Antonio","#ffffff"),(3,"aus","Austin",C["aus"]),(3,"sat","San Antonio",C["sat"]),(2,"hou","Houston",C["hou"])]
 y = 0.855; prev = {}
@@ -88,7 +88,7 @@ for lvl, code, name, col in rows:
     x = 0.07 + lvl*0.07
     if lvl > 0:
         px.plot([x-0.045, x-0.045, x-0.01], [prev[lvl-1]-0.03, y, y], color="#b9b2d6", lw=1)
-    w = 0.13 if code == "south" else 0.10
+    w = {"us-south":0.19,"us-gc":0.14}.get(code, 0.10)
     px.add_patch(FancyBboxPatch((x, y-0.026), w, 0.052, boxstyle="round,pad=0,rounding_size=0.012",
                  fc=col, ec=NAVY if code in ("tx","dfw","asa","hou") else "#c9c2e6", lw=1.4 if code in ("tx","dfw","asa","hou") else 0.8))
     px.text(x+w/2, y, code, ha="center", va="center", fontsize=10, fontweight="bold",
@@ -100,7 +100,7 @@ for lvl, code, name, col in rows:
 cx = fig.add_axes([0.67, 0.05, 0.31, 0.22]); cx.axis("off"); cx.set_xlim(0,1); cx.set_ylim(0,1)
 cx.add_patch(FancyBboxPatch((0,0),1,1, boxstyle="round,pad=0,rounding_size=0.03", fc="#12111a", ec="none"))
 cx.text(0.06, 0.87, "EXAMPLE: A DALLAS REPEATER", fontsize=9, color="#a48bff", fontweight="bold")
-cfg = ["region put us","region put south us","region put gc us","region put tx us","region put dfw tx","region put dal dfw","region save"]
+cfg = ["region put us","region put us-south","region put us-gc","region put tx us","region put dfw tx","region put dal dfw","region save"]
 for i, l in enumerate(cfg):
     cx.text(0.06, 0.72 - i*0.095, l, fontsize=9.5, color="#e8e6f2", family="monospace")
 fig.savefig(sys.argv[2], facecolor="white")
