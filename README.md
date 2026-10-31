@@ -73,7 +73,21 @@ Every Texas repeater carries `us`, `south`, `gc` and `tx`, so wide-area traffic 
 
 **Config tooling comes later.** Once there's enough agreement on the rules for how regions work and how they're defined, we can build tooling to generate the exact list of commands each user needs to enter on their repeater. Until then, use the examples above as a template.
 
-Companions (phones) don't hold region tags. Users pick a scope per channel, or set a default under Settings → Experimental → Default Region Scope.
+## Scoping per channel
+
+Repeaters carry the region tags, but the scope a message is sent on is chosen by the sender. Companions (phones) don't hold region tags themselves. Instead, each channel can have its own scope (Set Region Scope on the channel), and there's an app-wide default for everything else under Settings → Experimental → Default Region Scope.
+
+This lets each channel match its audience:
+
+| Channel | Suggested scope | Why |
+|---|---|---|
+| Public | `tx` or unscoped (`*`) | General chat that anyone in the state should be able to see |
+| `#weather` | Local metro or city, e.g. `dfw` or `aus` | Alerts for Houston aren't useful in Dallas |
+| `#bot` | Local metro or city, e.g. `hou` or `sat` | Bot replies and automated posts stay near the people using them |
+
+A Fort Worth user might keep Public on `tx`, set `#weather` to `dfw` and set `#bot` to `ftw`. They still see statewide chat, but they won't get weather updates or bot output from Austin or Houston.
+
+**Not every area needs its own scope.** Most conversation can stay in a local metro scope or in `tx`. An area only needs its own scope once it starts seeing excessive unwanted traffic from elsewhere. Until then, it's simpler to stay in `tx` and add a scope later if it's needed.
 
 ## Open questions
 
