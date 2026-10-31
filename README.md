@@ -75,7 +75,7 @@ Every Texas repeater carries `us`, `south`, `gc` and `tx`, so wide-area traffic 
 
 ## Scoping per channel
 
-Repeaters carry the region tags, but the scope a message is sent on is chosen by the sender. Companions (phones) don't hold region tags themselves. Instead, each channel can have its own scope (Set Region Scope on the channel), and there's an app-wide default for everything else under Settings → Experimental → Default Region Scope.
+Repeaters carry the region tags, but the scope a message is sent on is chosen by the sender. Companions (phones) don't hold region tags themselves. Instead, each channel can have its own scope (Set Region Scope on the channel), and there's an app-wide default for everything else in the main Settings screen under Network Settings.
 
 This lets each channel match its audience:
 
