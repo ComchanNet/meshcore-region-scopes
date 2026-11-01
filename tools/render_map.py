@@ -61,12 +61,12 @@ def lab(lon, lat, tlon, tlat, txt, sub, ha):
     ax.text(tlon*K, tlat, f" {txt} ", ha=ha, va="center", fontsize=11, fontweight="bold", color=INK, zorder=6, family="monospace",
             bbox=dict(boxstyle="round,pad=0.2", fc="white", ec="#c9c2e6", lw=0.8))
     ax.text(tlon*K, tlat-0.26, sub, ha=ha, va="center", fontsize=8.5, color="#4a4858", zorder=6)
-lab(-96.80, 32.78, -95.2, 32.6, "dal", "Dallas", "left")
-lab(-97.33, 32.75, -98.75, 32.45, "ftw", "Fort Worth", "right")
-lab(-97.74, 30.27, -98.75, 31.55, "aus", "Austin", "right")
-lab(-98.49, 29.42, -99.85, 29.05, "sat", "San Antonio", "right")
-lab(-95.37, 29.76, -94.6, 28.75, "hou", "Houston", "left")
-ax.text(-96.6*K, 34.45, "dfw", ha="center", fontsize=15, fontweight="bold", color=NAVY, zorder=6)
+lab(-96.80, 32.78, -95.2, 32.6, "us-tx-dal", "Dallas", "left")
+lab(-97.33, 32.75, -98.75, 32.45, "us-tx-ftw", "Fort Worth", "right")
+lab(-97.74, 30.27, -98.75, 31.55, "us-tx-aus", "Austin", "right")
+lab(-98.49, 29.42, -99.85, 29.05, "us-tx-sat", "San Antonio", "right")
+lab(-95.37, 29.76, -95.0, 28.75, "us-tx-hou", "Houston", "left")
+ax.text(-96.6*K, 34.45, "us-tx-dfw", ha="center", fontsize=15, fontweight="bold", color=NAVY, zorder=6)
 ax.text(-96.6*K, 34.22, "Dallas–Fort Worth", ha="center", fontsize=9, color=NAVY, zorder=6)
 for r, lon, lat in [("west",-102.3,32.4),("north",-99.9,34.05),("east",-94.55,31.75),("central",-99.6,30.55),("south",-98.6,27.4)]:
     ax.text(lon*K, lat, f"us-tx-{r}", ha="center", fontsize=12, fontweight="bold", color="#4a4560", family="monospace", zorder=4,
@@ -86,8 +86,8 @@ px.add_patch(FancyBboxPatch((0.0,0.0),1,1, boxstyle="round,pad=0,rounding_size=0
 px.text(0.06, 0.94, "HIERARCHY", fontsize=10, color="#6d4aff", fontweight="bold")
 rows = [(0,"us-south","South (wide-area)","#ffffff"),(0,"us-gc","Gulf Coast (wide-area)","#ffffff"),(0,"us","United States","#ffffff"),(1,"tx","Texas (statewide)",C["tx"]),
         (2,"us-tx-north","North",C["north"]),(2,"us-tx-east","East",C["east"]),(2,"us-tx-central","Central",C["central"]),(2,"us-tx-south","South",C["south"]),(2,"us-tx-west","West",C["west"]),
-        (2,"dfw","Dallas–Fort Worth","#ffffff"),(3,"dal","Dallas",C["dal"]),(3,"ftw","Fort Worth",C["ftw"]),
-        (2,"aus","Austin",C["aus"]),(2,"sat","San Antonio",C["sat"]),(2,"hou","Houston",C["hou"])]
+        (2,"us-tx-dfw","Dallas–Fort Worth","#ffffff"),(3,"us-tx-dal","Dallas",C["dal"]),(3,"us-tx-ftw","Fort Worth",C["ftw"]),
+        (2,"us-tx-aus","Austin",C["aus"]),(2,"us-tx-sat","San Antonio",C["sat"]),(2,"us-tx-hou","Houston",C["hou"])]
 y = 0.875; prev = {}
 for lvl, code, name, col in rows:
     x = 0.07 + lvl*0.07
@@ -95,9 +95,9 @@ for lvl, code, name, col in rows:
         px.plot([x-0.045, x-0.045, x-0.01], [prev[lvl-1]-0.02, y, y], color="#b9b2d6", lw=1)
     w = max(0.10, 0.026*len(code)+0.03)
     px.add_patch(FancyBboxPatch((x, y-0.02), w, 0.04, boxstyle="round,pad=0,rounding_size=0.012",
-                 fc=col, ec=NAVY if code in ("tx","dfw","aus","sat","hou") else "#c9c2e6", lw=1.4 if code in ("tx","dfw","aus","sat","hou") else 0.8))
+                 fc=col, ec=NAVY if code in ("tx","us-tx-dfw","us-tx-aus","us-tx-sat","us-tx-hou") else "#c9c2e6", lw=1.4 if code in ("tx","us-tx-dfw","us-tx-aus","us-tx-sat","us-tx-hou") else 0.8))
     px.text(x+w/2, y, code, ha="center", va="center", fontsize=9, fontweight="bold",
-            color="white" if code in ("dal","aus") else INK, family="monospace")
+            color="white" if code in ("us-tx-dal","us-tx-aus") else INK, family="monospace")
     px.text(x+w+0.025, y, name, va="center", fontsize=9, color=INK)
     prev[lvl] = y; y -= 0.0545
 
@@ -105,7 +105,7 @@ for lvl, code, name, col in rows:
 cx = fig.add_axes([0.67, 0.03, 0.31, 0.225]); cx.axis("off"); cx.set_xlim(0,1); cx.set_ylim(0,1)
 cx.add_patch(FancyBboxPatch((0,0),1,1, boxstyle="round,pad=0,rounding_size=0.03", fc="#12111a", ec="none"))
 cx.text(0.06, 0.87, "EXAMPLE: A DALLAS REPEATER", fontsize=9, color="#a48bff", fontweight="bold")
-cfg = ["region put us","region put us-south","region put us-gc","region put tx us","region put us-tx-north tx","region put dfw tx","region put dal dfw","region save"]
+cfg = ["region put us","region put us-south","region put us-gc","region put tx us","region put us-tx-north tx","region put us-tx-dfw tx","region put us-tx-dal us-tx-dfw","region save"]
 for i, l in enumerate(cfg):
     cx.text(0.06, 0.75 - i*0.087, l, fontsize=9, color="#e8e6f2", family="monospace")
 fig.savefig(sys.argv[2], facecolor="white")
