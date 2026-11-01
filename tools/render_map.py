@@ -85,12 +85,13 @@ px = fig.add_axes([0.67, 0.27, 0.31, 0.62]); px.axis("off"); px.set_xlim(0,1); p
 px.add_patch(FancyBboxPatch((0.0,0.0),1,1, boxstyle="round,pad=0,rounding_size=0.03", fc="#faf9ff", ec="#e2ddf5", lw=1))
 px.text(0.06, 0.94, "HIERARCHY", fontsize=10, color="#6d4aff", fontweight="bold")
 rows = [(0,"us-south","South (wide-area)","#ffffff"),(0,"us-gc","Gulf Coast (wide-area)","#ffffff"),(0,"us","United States","#ffffff"),(1,"tx","Texas (statewide)",C["tx"]),
-        (2,"us-tx-north","North",C["north"]),(2,"us-tx-east","East",C["east"]),(2,"us-tx-central","Central",C["central"]),(2,"us-tx-south","South",C["south"]),(2,"us-tx-west","West",C["west"]),
-        (2,"us-tx-dfw","Dallas–Fort Worth","#ffffff"),(3,"us-tx-dal","Dallas",C["dal"]),(3,"us-tx-ftw","Fort Worth",C["ftw"]),
-        (2,"us-tx-aus","Austin",C["aus"]),(2,"us-tx-sat","San Antonio",C["sat"]),(2,"us-tx-hou","Houston",C["hou"])]
+        (2,"us-tx-north","North",C["north"]),(3,"us-tx-dfw","Dallas–Fort Worth","#ffffff"),(4,"us-tx-dal","Dallas",C["dal"]),(4,"us-tx-ftw","Fort Worth",C["ftw"]),
+        (2,"us-tx-east","East",C["east"]),(3,"us-tx-hou","Houston",C["hou"]),
+        (2,"us-tx-central","Central",C["central"]),(3,"us-tx-aus","Austin",C["aus"]),(3,"us-tx-sat","San Antonio",C["sat"]),
+        (2,"us-tx-south","South",C["south"]),(2,"us-tx-west","West",C["west"])]
 y = 0.875; prev = {}
 for lvl, code, name, col in rows:
-    x = 0.07 + lvl*0.07
+    x = 0.06 + lvl*0.06
     if lvl > 0:
         px.plot([x-0.045, x-0.045, x-0.01], [prev[lvl-1]-0.02, y, y], color="#b9b2d6", lw=1)
     w = max(0.10, 0.026*len(code)+0.03)
@@ -105,7 +106,7 @@ for lvl, code, name, col in rows:
 cx = fig.add_axes([0.67, 0.03, 0.31, 0.225]); cx.axis("off"); cx.set_xlim(0,1); cx.set_ylim(0,1)
 cx.add_patch(FancyBboxPatch((0,0),1,1, boxstyle="round,pad=0,rounding_size=0.03", fc="#12111a", ec="none"))
 cx.text(0.06, 0.87, "EXAMPLE: A DALLAS REPEATER", fontsize=9, color="#a48bff", fontweight="bold")
-cfg = ["region put us","region put us-south","region put us-gc","region put tx us","region put us-tx-north tx","region put us-tx-dfw tx","region put us-tx-dal us-tx-dfw","region save"]
+cfg = ["region put us","region put us-south","region put us-gc","region put tx us","region put us-tx-north tx","region put us-tx-dfw us-tx-north","region put us-tx-dal us-tx-dfw","region save"]
 for i, l in enumerate(cfg):
     cx.text(0.06, 0.75 - i*0.087, l, fontsize=9, color="#e8e6f2", family="monospace")
 fig.savefig(sys.argv[2], facecolor="white")

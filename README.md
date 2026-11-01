@@ -6,7 +6,7 @@ _Draft for discussion · updated 2026-11-01 · adapted and simplified from the P
 
 ## Hierarchy
 
-`us-south` and `us-gc` are top-level scopes on the same level as `us`, with no parent. They're broad scopes for wide-area traffic, and the names match what mesh groups in neighboring states already use. `tx` sits under `us` and covers the whole state. Under `tx` are five statewide regions that together cover every county, plus the metro scopes.
+`us-south` and `us-gc` are top-level scopes on the same level as `us`, with no parent. They're broad scopes for wide-area traffic, and the names match what mesh groups in neighboring states already use. `tx` sits under `us` and covers the whole state. Under `tx` are five statewide regions that together cover every county, and each metro scope sits under the region it's in.
 
 | Scope | Name | Parent | Covers |
 |---|---|---|---|
@@ -19,27 +19,30 @@ _Draft for discussion · updated 2026-11-01 · adapted and simplified from the P
 | `us-tx-central` | Central | `tx` | I-35 corridor from Waco through Austin to San Antonio, Hill Country and Brazos Valley (47 counties) |
 | `us-tx-south` | South | `tx` | Coastal Bend, the border and the Rio Grande Valley (35 counties) |
 | `us-tx-west` | West | `tx` | Panhandle, South Plains, Permian Basin, Big Bend and Big Country, Amarillo to El Paso (90 counties) |
-| `us-tx-dfw` | Dallas–Fort Worth | `tx` | DFW metro plus edge counties (22 counties) |
+| `us-tx-dfw` | Dallas–Fort Worth | `us-tx-north` | DFW metro plus edge counties (22 counties) |
 | `us-tx-dal` | Dallas | `us-tx-dfw` | Collin, Dallas, Denton, Ellis, Hunt, Kaufman, Rockwall · edge: Fannin, Grayson, Henderson, Navarro, Van Zandt |
 | `us-tx-ftw` | Fort Worth | `us-tx-dfw` | Johnson, Parker, Tarrant, Wise · edge: Cooke, Hill, Hood, Jack, Palo Pinto, Somervell |
-| `us-tx-aus` | Austin | `tx` | Bastrop, Caldwell, Hays, Travis, Williamson · edge: Blanco, Burnet, Lee, Milam |
-| `us-tx-sat` | San Antonio | `tx` | Atascosa, Bandera, Bexar, Comal, Guadalupe, Kendall, Medina, Wilson · edge: Frio, Gillespie, Gonzales, Karnes, Kerr |
-| `us-tx-hou` | Houston | `tx` | Austin, Brazoria, Chambers, Fort Bend, Galveston, Harris, Liberty, Montgomery, San Jacinto, Waller · edge: Colorado, Grimes, Matagorda, Walker, Washington, Wharton |
+| `us-tx-aus` | Austin | `us-tx-central` | Bastrop, Caldwell, Hays, Travis, Williamson · edge: Blanco, Burnet, Lee, Milam |
+| `us-tx-sat` | San Antonio | `us-tx-central` | Atascosa, Bandera, Bexar, Comal, Guadalupe, Kendall, Medina, Wilson · edge: Frio, Gillespie, Gonzales, Karnes, Kerr |
+| `us-tx-hou` | Houston | `us-tx-east` | Austin, Brazoria, Chambers, Fort Bend, Galveston, Harris, Liberty, Montgomery, San Jacinto, Waller · edge: Colorado, Grimes, Matagorda, Walker, Washington, Wharton |
 
-Each metro starts from its OMB Metropolitan Statistical Area counties (Dallas and Fort Worth use the two MSA divisions) and adds the outlying counties along its edge, so repeaters on the fringe join the metro instead of falling back to `tx`. The edge counties are a first pass and easy to adjust. El Paso, the Valley and other areas without a metro scope use their region scope until a local community asks for a metro scope.
+Each metro starts from its OMB Metropolitan Statistical Area counties (Dallas and Fort Worth use the two MSA divisions) and adds the outlying counties along its edge, so repeaters on the fringe join the metro instead of only their region. The edge counties are a first pass and easy to adjust. El Paso, the Valley and other areas without a metro scope use their region scope until a local community asks for a metro scope.
 
-The five regions come from the "Texas in Five" proposal. Every county belongs to exactly one region, and metro areas are never split between regions. Metro scopes are separate from regions, so a few metro edge counties fall in a neighboring region: Van Zandt and Henderson (`us-tx-dal`) are in East, Navarro (`us-tx-dal`) and Hill (`us-tx-ftw`) are in Central, Frio and Karnes (`us-tx-sat`) are in South, and Grimes, Washington and Colorado (`us-tx-hou`) are in Central. A repeater in one of those counties carries its own region plus the metro scope.
+The five regions come from the "Texas in Five" proposal. Every county belongs to exactly one region, and metro areas are never split between regions. Each metro sits under the region that holds its core counties, but a few metro edge counties fall in a neighboring region: Van Zandt and Henderson (`us-tx-dal`) are in East, Navarro (`us-tx-dal`) and Hill (`us-tx-ftw`) are in Central, Frio and Karnes (`us-tx-sat`) are in South, and Grimes, Washington and Colorado (`us-tx-hou`) are in Central. A repeater in one of those counties carries its own region plus the metro's full chain, including the metro's region. For example, a Henderson County repeater carries `us-tx-east`, then `us-tx-north`, `us-tx-dfw` and `us-tx-dal`.
 
 ## What can sit under `tx`
 
-Every scope under `tx` has to be one of these four kinds:
+The five regions sit directly under `tx`. Every other scope sits under the region it's in, and has to be one of these kinds:
 
-1. **One of the five statewide regions.** These are `us-tx-north`, `us-tx-east`, `us-tx-central`, `us-tx-south` and `us-tx-west`, and together they cover every county.
-2. **A major metro area.** This is a metro scope named for the whole area, such as `us-tx-dfw` for Dallas–Fort Worth.
-3. **A grouping of IATA codes.** This joins neighboring airport-code areas under one scope, such as a future `us-tx-rgv` grouping the `hrl`, `mfe` and `bro` areas.
-4. **A single IATA code.** This is one city or area named by its airport code, such as `us-tx-hou`, `us-tx-dal`, `us-tx-ftw`, `us-tx-aus` or `us-tx-sat`.
+- **The five statewide regions.** These are `us-tx-north`, `us-tx-east`, `us-tx-central`, `us-tx-south` and `us-tx-west`, and together they cover every county.
 
-Areas that don't fit one of these stay in `tx` until they do. Future scopes follow the same rule, for example `us-tx-elp` (El Paso), `us-tx-crp` (Corpus Christi) or `us-tx-rgv` for the Rio Grande Valley.
+Under a region:
+
+1. **A major metro area.** This is a metro scope named for the whole area, such as `us-tx-dfw` for Dallas–Fort Worth.
+2. **A grouping of IATA codes.** This joins neighboring airport-code areas under one scope, such as a future `us-tx-rgv` grouping the `hrl`, `mfe` and `bro` areas.
+3. **A single IATA code.** This is one city or area named by its airport code, such as `us-tx-hou`, `us-tx-dal`, `us-tx-ftw`, `us-tx-aus` or `us-tx-sat`.
+
+Areas that don't fit one of these stay in their region until they do. Future scopes follow the same rule, for example `us-tx-elp` (El Paso) under `us-tx-west`, and `us-tx-crp` (Corpus Christi) or `us-tx-rgv` (Rio Grande Valley) under `us-tx-south`.
 
 ## What we kept from the PNW document
 
@@ -58,7 +61,7 @@ region put us-south
 region put us-gc
 region put tx us
 region put us-tx-north tx
-region put us-tx-dfw tx
+region put us-tx-dfw us-tx-north
 region put us-tx-dal us-tx-dfw
 region save
 ```
@@ -71,11 +74,11 @@ region put us-south
 region put us-gc
 region put tx us
 region put us-tx-central tx
-region put us-tx-sat tx
+region put us-tx-sat us-tx-central
 region save
 ```
 
-Every Texas repeater carries `us`, `us-south`, `us-gc` and `tx`, so wide-area traffic on the broad scopes reaches the whole state. Every Texas repeater also carries the one region its county is in. A rural repeater outside any metro stops after its region, for example `region put us-tx-west tx`. A Houston repeater ends with `region put us-tx-east tx` and `region put us-tx-hou tx`. On firmware 1.14.x and earlier, add `region allowf <name>` after each `put`.
+Every Texas repeater carries `us`, `us-south`, `us-gc` and `tx`, so wide-area traffic on the broad scopes reaches the whole state. Every Texas repeater also carries the one region its county is in. A rural repeater outside any metro stops after its region, for example `region put us-tx-west tx`. A Houston repeater ends with `region put us-tx-east tx` and `region put us-tx-hou us-tx-east`. On firmware 1.14.x and earlier, add `region allowf <name>` after each `put`.
 
 **Keep unscoped traffic for now.** Unscoped traffic uses the reserved root region `*`, and repeaters allow flood on it by default. Do not remove or deny flood on `*` on any repeater yet. Many nodes run older firmware or haven't set a region scope, and they still depend on unscoped flood. We'll decide on a later date for removing `*` once region scopes are widely adopted.
 
